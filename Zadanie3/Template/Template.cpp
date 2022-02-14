@@ -3,12 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include <iostream>
 #include <algorithm>
-#include <stdlib.h>
-#include <time.h>
-
-
 
 
 template <typename T, typename D>
@@ -18,8 +13,7 @@ std::vector<T>* addVector(std::vector<T>& vec1, std::vector<D>& vec2)
     size_t size = (vec1.size() > vec2.size() ? vec1.size() : vec2.size());
     for (size_t i = 0; i < size; i++)
     {
-        v->push_back(0);
-        (*v)[i] = ((vec1.size() > i) ? vec1[i] : 0) + ((vec2.size() > i) ? vec2[i] : 0);
+        v->push_back(((vec1.size() > i) ? vec1[i] : 0) + ((vec2.size() > i) ? vec2[i] : 0));
     }
     return v;
 }
@@ -60,4 +54,5 @@ int main()
     std::cout << std::endl;
 
     std::cout << "Hello World!\n";
+    delete(p);
 }
