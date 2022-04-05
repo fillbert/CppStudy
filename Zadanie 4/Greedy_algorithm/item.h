@@ -2,41 +2,52 @@
 #include <stdint.h>
 #include <math.h> 
 
-class item
+class my_item
 {
 public:
-	item(uint32_t weight, uint32_t cost, bool cabBeSplited = false) :weight(weight), cost(cost), refCostWeight((double)cost / (double)weight), cabBeSplited(cabBeSplited = false)
+	my_item(uint32_t weight, uint32_t cost, bool cabBeSplited = false) :weight(weight), cost(cost), refCostWeight((double)cost / (double)weight), cabBeSplited(cabBeSplited = false)
 	{
 
 	}
 
 	uint32_t getCost()		{ return cost; }
 	uint32_t getWeight()	{ return weight; }
-	double   getRef()		{ return refCostWeight; }
+	const double			refCostWeight;
 
-	item operator=(const item& lhs)
+	my_item operator=(const my_item& lhs)
 	{
 		return *this;
 	};
 
-	friend bool operator< (  item& a,  item& b)
+
+	bool operator< (const my_item& a) const
 	{
-		return a.getRef() < b.getRef();
+		return refCostWeight < a.refCostWeight;
 	};
+
+	//bool operator() (const item& a, const item& b)
+	//{
+	//	return a.refCostWeight < b.refCostWeight;
+	//};
+
+	//bool operator< ( item& a,  item& b)
+	//{
+	//	return a.getRef() < b.getRef();
+	//};
 
 	//friend bool operator> (item& a, item& b)
 	//{
 	//	return a.getRef() > b.getRef();
 	//};
+
 	//friend bool operator== (item& a, item& b)
 	//{
 	//	return a.getRef() == b.getRef();
 	//};
 	
 private:
-	const uint32_t weight;
-	const uint32_t cost;
-	const double refCostWeight;
-	const bool cabBeSplited;
+	const uint32_t	weight;
+	const uint32_t	cost;
+	const bool		cabBeSplited;
 };
 

@@ -12,34 +12,55 @@
 #define BACKPACK_CAPASITY   2000
 #define CAN_BE_SPLEETED     true
 
-typedef std::pair<std::string, item> mpair;
+typedef std::pair<std::string, my_item> mpair;
+
+struct mySort {
+    inline bool operator() (mpair& a, mpair& b) 
+    { 
+        bool ret = a.second.getWeight() < b.second.getWeight();
+        std::cout << std::left << std::setw(10) << a.first << ((ret) ? " < " : " > ") << b.first << std::endl;
+        return ret;
+    }
+}mySortClass;
+
+
+struct less_than_key
+{
+    inline bool operator() ( mpair& s1,  mpair& s2)
+    {
+        return (s1.second.getWeight() < s2.second.getWeight());
+    }
+}less_than_keyC;
 
 int main()
 {
     // create items
-    std::map<std::string, item> items{  
-        {"Paints", item(500, 1800)},
-        {"Books", item(2000, 500)},
-        {"Penal", item(400, 2000)}, 
-        {"SideTrip", item(500, 1000, CAN_BE_SPLEETED)},
+    std::map<std::string, my_item> items{
+        {"Paints", my_item(500, 1800)},
+        {"Books", my_item(2000, 500)},
+        {"Penal", my_item(400, 2000)},
+        {"SideTrip", my_item(500, 1000, CAN_BE_SPLEETED)},
     };
 
+    size_t displacement = 0;
+
     //Lambda for printing
-    auto printValue = [](mpair n) { std::cout << n.second.getRef() << ' '; };
+    auto printValue = [](mpair n) { std::cout << n.second.refCostWeight << ' '; };
 
     //Lambda for sorting
-    auto sorting = []( mpair&a,   mpair& b)
+    auto sorting = [&displacement]( const mpair&a,   const mpair& b)
     {
         bool ret;
         ret = a.second < b.second;
-        std::cout << a.first << ((ret)?" < ":" > ") << b.first << std::endl;
+        displacement++;
+        std::cout  << std::left << std::setw(10)  << a.first << ((ret)?" < ":" > ") << b.first << std::endl;
         return ret;
     };
 
     // print items list
     for (auto& it : items)
     {
-        item * p = &it.second;
+        my_item* p = &it.second;
         std::cout 
             << std::left << std::setw(10)  << "Object - " 
             << std::left << std::setw(10) << it.first
@@ -48,7 +69,7 @@ int main()
             << std::left << std::setw(10) << "| Weight: " 
             << std::left << std::setw(10)  << p->getWeight()
             << std::left << std::setw(10) << "| Ref: "
-            << std::left << std::setw(10)  << p->getRef()
+            << std::left << std::setw(10)  << p->refCostWeight
             << std::endl;
     }
 
@@ -57,15 +78,18 @@ int main()
     std::copy(items.begin(),items.end(),
         std::back_inserter<std::vector<mpair>>(vec));
 
-    // befo sorting 
+    // before sorting 
     std::for_each(vec.begin(), vec.end(), printValue);
+    std::cout << std::endl;
 
     // sort map
-    std::sort(vec.begin(), vec.end(), sorting);
+    std::sort(vec.begin(), vec.end(), less_than_keyC);
 
     //after sorting
     std::for_each(vec.begin(), vec.end(), printValue);
-      
+    std::cout << std::endl;
+    
+    std::cout << "Sorting was called : " << displacement << " times" << std::endl;
 }
 
 
