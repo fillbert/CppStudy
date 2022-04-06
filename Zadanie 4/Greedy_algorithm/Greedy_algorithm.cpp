@@ -32,6 +32,8 @@ struct less_than_key
     }
 }less_than_keyC;
 
+#define CAPASITY            8.9
+
 int main()
 {
     // create items
@@ -43,9 +45,48 @@ int main()
     };
 
     size_t displacement = 0;
+    double capacity = CAPASITY;
 
     //Lambda for printing
     auto printValue = [](mpair n) { std::cout << n.second.refCostWeight << ' '; };
+
+
+    auto Greedy_full = [&capacity](mpair n)
+    {
+        //
+        if (n.second.canBeSplited == true)  return;
+        //
+        if (capacity >= n.second.refCostWeight)
+        {
+            capacity -= n.second.refCostWeight;
+            std::cout << "Put Item: " << n.first << std::endl;
+            std::cout << "Back has: " << (capacity / CAPASITY * 100) << "%" << " capasity" << std::endl;
+        }
+    };
+
+    auto Greedy_part = [&capacity](mpair n)
+    {
+        //
+        if (n.second.canBeSplited == false)  return;
+        //
+
+        if (capacity >= n.second.refCostWeight)
+        {
+            capacity -= n.second.refCostWeight;
+            std::cout << "Put Item: " << n.first << std::endl;
+            std::cout << "Back has: " << (capacity / CAPASITY * 100) << "%" << " capasity" << std::endl;
+        }
+        else
+        {
+            if (n.second.canBeSplited)
+            {
+                double partOfItem = capacity / n.second.refCostWeight;
+                capacity -= (n.second.refCostWeight * partOfItem);
+                std::cout << "Put Part " << partOfItem << " of the Item: " << n.first << std::endl;
+                std::cout << "Back has: " << (capacity / CAPASITY * 100) << "%" << " capasity" << std::endl;
+            }
+        }
+    };
 
     //Lambda for sorting
     auto sorting = [&displacement]( const mpair&a,   const mpair& b)
@@ -70,6 +111,8 @@ int main()
             << std::left << std::setw(10)  << p->getWeight()
             << std::left << std::setw(10) << "| Ref: "
             << std::left << std::setw(10)  << p->refCostWeight
+            << std::left << std::setw(10) << "| Splited?: "
+            << std::left << std::setw(10) << p->canBeSplited
             << std::endl;
     }
 
@@ -79,6 +122,7 @@ int main()
         std::back_inserter<std::vector<mpair>>(vec));
 
     // before sorting 
+    std::cout << "Before Sort: " << std::endl;
     std::for_each(vec.begin(), vec.end(), printValue);
     std::cout << std::endl;
 
@@ -86,10 +130,17 @@ int main()
     std::sort(vec.begin(), vec.end(), less_than_keyC);
 
     //after sorting
+    std::cout << "After Sort: " << std::endl;
     std::for_each(vec.begin(), vec.end(), printValue);
     std::cout << std::endl;
+
+    // greedy solver
+    std::cout << "Back has: " << (capacity / CAPASITY * 100) << "%" << " capasity" << std::endl;
+    std::for_each(vec.begin(), vec.end(), Greedy_full);
+    std::for_each(vec.begin(), vec.end(), Greedy_part);
     
-    std::cout << "Sorting was called : " << displacement << " times" << std::endl;
+    //
+    return 0;
 }
 
 
