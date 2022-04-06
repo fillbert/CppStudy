@@ -5,17 +5,29 @@
 class my_item
 {
 public:
-	my_item(uint32_t weight, uint32_t cost, bool cabBeSplited = false) :weight(weight), cost(cost), refCostWeight((double)cost / (double)weight), cabBeSplited(cabBeSplited = false)
+	my_item(uint32_t weight, uint32_t cost, bool cabBeSplited = false) :weight(weight), cost(cost), refCostWeight((double)cost / (double)weight), canBeSplited(cabBeSplited = false)
 	{
 
 	}
 
+	my_item()
+	{
+		weight = 0;
+		cost = 0;
+		canBeSplited = 0;
+		refCostWeight = 0;
+	}
+
 	uint32_t getCost()		{ return cost; }
 	uint32_t getWeight()	{ return weight; }
-	const double			refCostWeight;
+	double	 refCostWeight;
 
-	my_item operator=(const my_item& lhs)
+	const my_item& operator=(const my_item& lhs)
 	{
+		weight = lhs.weight;
+		cost   = lhs.weight;
+		canBeSplited = lhs.canBeSplited;
+		refCostWeight = lhs.refCostWeight;
 		return *this;
 	};
 
@@ -46,8 +58,8 @@ public:
 	//};
 	
 private:
-	const uint32_t	weight;
-	const uint32_t	cost;
-	const bool		cabBeSplited;
+	uint32_t	weight;
+	uint32_t	cost;
+	bool		canBeSplited;
 };
 
